@@ -90,11 +90,12 @@ function App() {
           return dates.map((date, index) => {
             const data = dateDataMap[date.id] || {};
             const isCompleted = data.is_completed;
+            const hasReview = !!data.nisho_review || !!data.haydar_review || !!data.review;
             
             const isLocked = index > 0 ? !isPreviousCompleted : false;
             
-            // Only unlock the next if current is completed
-            isPreviousCompleted = isCompleted;
+            // Only unlock the next if current is completed AND has a review
+            isPreviousCompleted = isCompleted && hasReview;
 
             return (
               <DateCard

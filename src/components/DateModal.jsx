@@ -5,8 +5,10 @@ import { uploadPhoto } from '../utils/storage';
 const DateModal = ({ date, data, currentUser, onClose, onUpdateData }) => {
   const fileInputRef = useRef(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [rating, setRating] = useState(data.rating || 0);
-  const [review, setReview] = useState(data.review || '');
+  const [nishoRating, setNishoRating] = useState(data.nisho_rating || data.rating || 0);
+  const [nishoReview, setNishoReview] = useState(data.nisho_review || data.review || '');
+  const [haydarRating, setHaydarRating] = useState(data.haydar_rating || 0);
+  const [haydarReview, setHaydarReview] = useState(data.haydar_review || '');
 
   const isCompleted = data.is_completed;
   const photo = data.photo_url;
@@ -31,7 +33,11 @@ const DateModal = ({ date, data, currentUser, onClose, onUpdateData }) => {
   };
 
   const handleSaveReview = () => {
-    onUpdateData(date.id, { rating, review });
+    if (currentUser === 'Nisho') {
+      onUpdateData(date.id, { nisho_rating: nishoRating, nisho_review: nishoReview });
+    } else {
+      onUpdateData(date.id, { haydar_rating: haydarRating, haydar_review: haydarReview });
+    }
   };
 
   return (
@@ -90,31 +96,74 @@ const DateModal = ({ date, data, currentUser, onClose, onUpdateData }) => {
               </div>
 
               {/* Rating & Review Section */}
-              <div className="review-section">
-                <h3>Rate this Date</h3>
-                <div className="star-rating">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star 
-                      key={star} 
-                      size={24} 
-                      className={star <= rating ? "star filled" : "star"} 
-                      onClick={() => setRating(star)}
+              <div className="review-container">
+                
+                {/* Nisho's Review */}
+                <div className={`review-box ${currentUser === 'Nisho' ? 'active-user' : ''}`}>
+                  <h3>👧 Nisho's Review</h3>
+                  <div className="star-rating">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star 
+                        key={star} 
+                        size={20} 
+                        className={star <= nishoRating ? "star filled" : "star"} 
+                        onClick={() => currentUser === 'Nisho' && setNishoRating(star)}
+                      />
+                    ))}
+                  </div>
+                  {currentUser === 'Nisho' ? (
+                    <textarea 
+                      className="review-input"
+                      placeholder="Ceritakan momen terbaik dari kencan ini..."
+                      value={nishoReview}
+                      onChange={(e) => setNishoReview(e.target.value)}
                     />
-                  ))}
+                  ) : (
+                    <div className="read-only-review">
+                      {nishoReview ? <p>{nishoReview}</p> : <p className="empty-text">Nisho belum menulis review.</p>}
+                    </div>
+                  )}
+                  
+                  {currentUser === 'Nisho' && (nishoRating !== (data.nisho_rating || data.rating || 0) || nishoReview !== (data.nisho_review || data.review || '')) && (
+                    <button className="btn-secondary save-review-btn" onClick={handleSaveReview}>
+                      Save Review
+                    </button>
+                  )}
                 </div>
-                
-                <textarea 
-                  className="review-input"
-                  placeholder="Ceritakan momen terbaik dari kencan ini..."
-                  value={review}
-                  onChange={(e) => setReview(e.target.value)}
-                />
-                
-                {(rating !== data.rating || review !== data.review) && (
-                  <button className="btn-secondary save-review-btn" onClick={handleSaveReview}>
-                    Save Review
-                  </button>
-                )}
+
+                {/* Haydar's Review */}
+                <div className={`review-box ${currentUser === 'Haydar' ? 'active-user' : ''}`}>
+                  <h3>👦 Haydar's Review</h3>
+                  <div className="star-rating">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star 
+                        key={star} 
+                        size={20} 
+                        className={star <= haydarRating ? "star filled" : "star"} 
+                        onClick={() => currentUser === 'Haydar' && setHaydarRating(star)}
+                      />
+                    ))}
+                  </div>
+                  {currentUser === 'Haydar' ? (
+                    <textarea 
+                      className="review-input"
+                      placeholder="Ceritakan momen terbaik dari kencan ini..."
+                      value={haydarReview}
+                      onChange={(e) => setHaydarReview(e.target.value)}
+                    />
+                  ) : (
+                    <div className="read-only-review">
+                      {haydarReview ? <p>{haydarReview}</p> : <p className="empty-text">Haydar belum menulis review.</p>}
+                    </div>
+                  )}
+                  
+                  {currentUser === 'Haydar' && (haydarRating !== (data.haydar_rating || 0) || haydarReview !== (data.haydar_review || '')) && (
+                    <button className="btn-secondary save-review-btn" onClick={handleSaveReview}>
+                      Save Review
+                    </button>
+                  )}
+                </div>
+
               </div>
             </div>
           )}
