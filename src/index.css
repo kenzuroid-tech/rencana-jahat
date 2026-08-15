@@ -716,6 +716,18 @@ body {
     font-size: 2.5rem;
   }
   
+  .welcome-card {
+    padding: 2.5rem 1.5rem;
+  }
+  
+  .welcome-card h1 {
+    font-size: 2.2rem;
+  }
+  
+  .welcome-card > p {
+    font-size: 1.5rem;
+  }
+  
   .modal-content {
     padding: 1.5rem;
   }
