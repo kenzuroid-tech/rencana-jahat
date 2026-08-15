@@ -1,30 +1,30 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
 
 :root {
   --bg-primary: #0f172a;
   --bg-secondary: #1e293b;
   --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
+  --text-secondary: #cbd5e1;
   --accent-primary: #ec4899;
   --accent-secondary: #8b5cf6;
   --success: #10b981;
   --warning: #fbbf24;
   
-  font-family: 'Nunito', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Outfit', system-ui, Avenir, Helvetica, Arial, sans-serif;
   color: var(--text-primary);
   background-color: var(--bg-primary);
 }
 
 :root.theme-nisho {
-  --accent-primary: #fb7185; /* Soft Pinkish Maroon */
+  --accent-primary: #fb7185;
   --accent-secondary: #f43f5e;
-  --bg-gradient: radial-gradient(circle at top right, #4c0519, #0f172a 70%);
+  --bg-gradient: linear-gradient(-45deg, #4c0519, #0f172a, #7f1d1d, #111827);
 }
 
 :root.theme-haydar {
-  --accent-primary: #38bdf8; /* Soft Sky Blue */
+  --accent-primary: #38bdf8;
   --accent-secondary: #0284c7;
-  --bg-gradient: radial-gradient(circle at top right, #082f49, #0f172a 70%);
+  --bg-gradient: linear-gradient(-45deg, #082f49, #0f172a, #0369a1, #111827);
 }
 
 * {
@@ -35,9 +35,16 @@
 
 body {
   min-height: 100vh;
-  background: var(--bg-gradient, radial-gradient(circle at top right, #311847, #0f172a 60%));
-  background-attachment: fixed;
-  transition: background 0.5s ease;
+  background: var(--bg-gradient, linear-gradient(-45deg, #311847, #0f172a, #2e1065, #000000));
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+  transition: background 0.8s ease;
+}
+
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 #root {
@@ -89,18 +96,21 @@ body {
 }
 
 .header h1 {
-  font-size: 3.5rem;
+  font-size: 4rem;
   font-weight: 900;
   background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 0.5rem;
+  letter-spacing: -1px;
 }
 
 .header p {
   color: var(--text-secondary);
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 1.5rem;
+  font-family: 'Caveat', cursive;
+  font-weight: 500;
+  letter-spacing: 1px;
 }
 
 /* Welcome Screen */
@@ -113,32 +123,60 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: radial-gradient(circle at top right, #311847, #0f172a 80%);
+  background: linear-gradient(-45deg, #311847, #0f172a, #2e1065, #000000);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
 }
 
 .welcome-card {
-  background: rgba(30, 41, 59, 0.7);
-  backdrop-filter: blur(10px);
-  padding: 3rem;
-  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 4rem 3rem;
+  border-radius: 32px;
   border: 1px solid rgba(255,255,255,0.1);
   text-align: center;
-  animation: slideUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 500px;
+  width: 90%;
+}
+
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(60px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.welcome-icon-container {
+  display: inline-flex;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(139, 92, 246, 0.2));
+  border-radius: 50%;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 40px rgba(236, 72, 153, 0.2);
+  animation: float 4s ease-in-out infinite;
 }
 
 .welcome-icon {
   color: var(--accent-primary);
-  margin-bottom: 1rem;
+  filter: drop-shadow(0 0 10px var(--accent-primary));
 }
 
 .welcome-card h1 {
-  font-size: 2.5rem;
+  font-size: 3rem;
   margin-bottom: 0.5rem;
+  font-weight: 900;
+  background: linear-gradient(to right, #fff, #cbd5e1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.welcome-card p {
-  color: var(--text-secondary);
-  margin-bottom: 2.5rem;
+.welcome-card > p {
+  color: var(--accent-primary);
+  margin-bottom: 3rem;
+  font-family: 'Caveat', cursive;
+  font-size: 2rem;
 }
 
 .user-selection h3 {
@@ -379,18 +417,26 @@ body {
 }
 
 .modal-content {
-  background: var(--bg-secondary);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 24px;
-  padding: 2.5rem;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 32px;
+  padding: 3rem;
   width: 100%;
-  max-width: 500px;
+  max-width: 600px;
   position: relative;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-  animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  animation: modalPop 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   max-height: 90vh;
   overflow-y: auto;
 }
+
+@keyframes modalPop {
+  0% { transform: scale(0.95) translateY(20px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
 
 .modal-close {
   position: absolute;
@@ -436,9 +482,10 @@ body {
 .modal-description {
   color: var(--text-secondary);
   text-align: center;
-  font-size: 1.1rem;
-  line-height: 1.6;
+  font-size: 1.5rem;
+  line-height: 1.4;
   margin-bottom: 2rem;
+  font-family: 'Caveat', cursive;
 }
 
 /* Buttons */
@@ -613,20 +660,24 @@ body {
 
 .review-input {
   width: 100%;
-  background: rgba(0,0,0,0.2);
+  background: rgba(0,0,0,0.3);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 12px;
   padding: 1rem;
   color: white;
   font-family: inherit;
+  font-size: 1rem;
   resize: vertical;
   min-height: 100px;
   margin-bottom: 1rem;
+  transition: all 0.3s ease;
 }
 
 .review-input:focus {
   outline: none;
   border-color: var(--accent-primary);
+  background: rgba(0,0,0,0.5);
+  box-shadow: 0 0 15px rgba(236, 72, 153, 0.1);
 }
 
 .save-review-btn {
@@ -672,4 +723,67 @@ body {
   .date-grid {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
+}
+
+/* --- Playful Animations for Welcome Screen --- */
+.typing-effect {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: .15em solid var(--accent-primary);
+  animation: typing 2.5s steps(30, end), blink-caret .75s step-end infinite;
+  margin: 0 auto 0.5rem auto;
+}
+
+.typing-effect-delayed {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  opacity: 0;
+  animation: typing-delayed 2s steps(30, end) 2.5s forwards;
+  margin: 0 auto 3rem auto;
+}
+
+@keyframes typing {
+  from { max-width: 0; }
+  to { max-width: 100%; }
+}
+
+@keyframes typing-delayed {
+  from { max-width: 0; opacity: 1; }
+  to { max-width: 100%; opacity: 1; }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: var(--accent-primary); }
+}
+
+.floating-heart {
+  position: absolute;
+  bottom: -20px;
+  color: rgba(255, 255, 255, 0.5);
+  animation: flyUp linear infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+@keyframes flyUp {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.5; }
+  90% { opacity: 0.5; }
+  100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+}
+
+.btn-playful {
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.btn-playful:hover {
+  transform: scale(1.1) rotate(-3deg);
+  z-index: 10;
+}
+
+.btn-playful.haydar:hover {
+  transform: scale(1.1) rotate(3deg);
 }
