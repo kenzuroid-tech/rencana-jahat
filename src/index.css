@@ -464,6 +464,35 @@ body {
   box-shadow: 0 10px 20px rgba(236, 72, 153, 0.3);
 }
 
+.photos-container {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .photos-container {
+    flex-direction: column;
+  }
+}
+
+.photo-upload-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.photo-upload-section h4 {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
 .btn-secondary {
   display: flex;
   align-items: center;
@@ -516,9 +545,14 @@ body {
   color: var(--text-secondary);
 }
 
-.photo-placeholder:hover {
-  border-color: rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.02);
+.photo-placeholder:hover:not(.disabled) {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--accent-primary);
+}
+
+.photo-placeholder.disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .photo-preview {

@@ -97,13 +97,21 @@ function App() {
             // Only unlock the next if current is completed AND has a review
             isPreviousCompleted = isCompleted && hasReview;
 
+            const nishoPhoto = data.nisho_photo_url;
+            const haydarPhoto = data.haydar_photo_url;
+            const fallbackPhoto = data.photo_url;
+
+            const displayPhoto = currentUser === 'Nisho' 
+              ? (nishoPhoto || haydarPhoto || fallbackPhoto) 
+              : (haydarPhoto || nishoPhoto || fallbackPhoto);
+
             return (
               <DateCard
                 key={date.id}
                 date={date}
                 isCompleted={isCompleted}
                 isLocked={isLocked}
-                photo={data.photo_url}
+                photo={displayPhoto}
                 onClick={handleCardClick}
               />
             );

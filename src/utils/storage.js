@@ -5,10 +5,10 @@ const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
-export const uploadPhoto = async (id, file) => {
+export const uploadPhoto = async (id, file, username) => {
   try {
     const fileExt = file.name.split('.').pop();
-    const fileName = `${id}-${Math.random()}.${fileExt}`;
+    const fileName = `${id}-${username || 'unknown'}-${Math.random()}.${fileExt}`;
     const filePath = `public/${fileName}`;
 
     const { error: uploadError } = await supabase.storage

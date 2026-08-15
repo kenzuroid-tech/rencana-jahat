@@ -3,25 +3,34 @@ import { X, Upload, Check, Image as ImageIcon, Star } from 'lucide-react';
 import { uploadPhoto } from '../utils/storage';
 
 const DateModal = ({ date, data, currentUser, onClose, onUpdateData }) => {
-  const fileInputRef = useRef(null);
-  const [isUploading, setIsUploading] = useState(false);
+  const nishoFileInputRef = useRef(null);
+  const haydarFileInputRef = useRef(null);
+  const [isUploadingNisho, setIsUploadingNisho] = useState(false);
+  const [isUploadingHaydar, setIsUploadingHaydar] = useState(false);
   const [nishoRating, setNishoRating] = useState(data.nisho_rating || data.rating || 0);
   const [nishoReview, setNishoReview] = useState(data.nisho_review || data.review || '');
   const [haydarRating, setHaydarRating] = useState(data.haydar_rating || 0);
   const [haydarReview, setHaydarReview] = useState(data.haydar_review || '');
 
   const isCompleted = data.is_completed;
-  const photo = data.photo_url;
+  const nishoPhoto = data.nisho_photo_url || data.photo_url; // fallback to old photo for Nisho if needed
+  const haydarPhoto = data.haydar_photo_url;
 
-  const handleFileChange = async (e) => {
+  const handleFileChange = async (e, username) => {
     const file = e.target.files[0];
     if (file) {
-      setIsUploading(true);
-      const publicUrl = await uploadPhoto(date.id, file);
+      if (username === 'Nisho') setIsUploadingNisho(true);
+      else setIsUploadingHaydar(true);
+
+      const publicUrl = await uploadPhoto(date.id, file, username);
+      
       if (publicUrl) {
-        onUpdateData(date.id, { photo_url: publicUrl });
+        if (username === 'Nisho') onUpdateData(date.id, { nisho_photo_url: publicUrl });
+        else onUpdateData(date.id, { haydar_photo_url: publicUrl });
       }
-      setIsUploading(false);
+      
+      if (username === 'Nisho') setIsUploadingNisho(false);
+      else setIsUploadingHaydar(false);
     }
   };
 
@@ -67,32 +76,78 @@ const DateModal = ({ date, data, currentUser, onClose, onUpdateData }) => {
                 <Check size={18} /> Completed {data.posted_by ? `with ${data.posted_by}` : ''}
               </div>
               
-              <div className="photo-upload-section">
-                {photo ? (
-                  <div className="photo-preview">
-                    <img src={photo} alt="Memory" />
-                    <button className="btn-secondary" onClick={() => fileInputRef.current.click()}>
-                      <Upload size={16} /> Change Photo
-                    </button>
-                  </div>
-                ) : (
-                  <div className="photo-placeholder" onClick={() => fileInputRef.current.click()}>
-                    <ImageIcon size={32} />
-                    <span>Upload a memory from this date</span>
-                    <button className="btn-secondary mt-2">
-                       <Upload size={16} /> Select Photo
-                    </button>
-                  </div>
-                )}
-                <input 
-                  type="file" 
-                  accept="image/*" 
-                  ref={fileInputRef} 
-                  style={{ display: 'none' }}
-                  onChange={handleFileChange}
-                  disabled={isUploading}
-                />
-                {isUploading && <span className="upload-status">Uploading...</span>}
+              <div className="photos-container">
+                {/* Nisho's Photo */}
+                <div className="photo-upload-section">
+                  <h4>👧 Nisho's Memory</h4>
+                  {nishoPhoto ? (
+                    <div className="photo-preview">
+                      <img src={nishoPhoto} alt="Nisho Memory" />
+                      {currentUser === 'Nisho' && (
+                        <button className="btn-secondary" onClick={() => nishoFileInputRef.current.click()}>
+                          <Upload size={16} /> Change Photo
+                        </button>
+                      )}
+                    </div>
+                  ) : (
+                    <div className={`photo-placeholder ${currentUser !== 'Nisho' ? 'disabled' : ''}`} onClick={() => currentUser === 'Nisho' && nishoFileInputRef.current.click()}>
+                      <ImageIcon size={32} />
+                      {currentUser === 'Nisho' ? (
+                        <>
+                          <span>Upload your memory</span>
+                          <button className="btn-secondary mt-2">
+                             <Upload size={16} /> Select Photo
+                          </button>
+                        </>
+                      ) : <span>Nisho belum upload foto</span>}
+                    </div>
+                  )}
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    ref={nishoFileInputRef} 
+                    style={{ display: 'none' }}
+                    onChange={(e) => handleFileChange(e, 'Nisho')}
+                    disabled={isUploadingNisho}
+                  />
+                  {isUploadingNisho && <span className="upload-status">Uploading...</span>}
+                </div>
+
+                {/* Haydar's Photo */}
+                <div className="photo-upload-section">
+                  <h4>👦 Haydar's Memory</h4>
+                  {haydarPhoto ? (
+                    <div className="photo-preview">
+                      <img src={haydarPhoto} alt="Haydar Memory" />
+                      {currentUser === 'Haydar' && (
+                        <button className="btn-secondary" onClick={() => haydarFileInputRef.current.click()}>
+                          <Upload size={16} /> Change Photo
+                        </button>
+                      )}
+                    </div>
+                  ) : (
+                    <div className={`photo-placeholder ${currentUser !== 'Haydar' ? 'disabled' : ''}`} onClick={() => currentUser === 'Haydar' && haydarFileInputRef.current.click()}>
+                      <ImageIcon size={32} />
+                      {currentUser === 'Haydar' ? (
+                        <>
+                          <span>Upload your memory</span>
+                          <button className="btn-secondary mt-2">
+                             <Upload size={16} /> Select Photo
+                          </button>
+                        </>
+                      ) : <span>Haydar belum upload foto</span>}
+                    </div>
+                  )}
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    ref={haydarFileInputRef} 
+                    style={{ display: 'none' }}
+                    onChange={(e) => handleFileChange(e, 'Haydar')}
+                    disabled={isUploadingHaydar}
+                  />
+                  {isUploadingHaydar && <span className="upload-status">Uploading...</span>}
+                </div>
               </div>
 
               {/* Rating & Review Section */}
